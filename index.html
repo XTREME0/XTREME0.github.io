@@ -1,1 +1,561 @@
-hello
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anas TAAI | Code & Security</title>
+    <style>
+        :root {
+            --primary: #0afb60;
+            --secondary: #00a8ff;
+            --bg-dark: #0a0a0a;
+            --bg-light: #121212;
+            --text: #e0e0e0;
+            --text-dim: #a0a0a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .terminal-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(10, 251, 96, 0.05),
+                rgba(10, 251, 96, 0.05) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Floating Image */
+        #floating-image {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            z-index: 1000;
+            pointer-events: none;
+            transition: transform 0.2s ease-out;
+            filter: drop-shadow(0 0 5px rgba(0, 168, 255, 0.5));
+        }
+
+        .image-trail {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            opacity: 0.7;
+            animation: fadeTrail 3s forwards;
+            z-index: 999;
+            filter: drop-shadow(0 0 3px rgba(0, 168, 255, 0.3));
+        }
+
+        @keyframes fadeTrail {
+            0% { opacity: 0.7; transform: scale(1) rotate(0deg); }
+            100% { opacity: 0; transform: scale(0.5) rotate(180deg); }
+        }
+
+        /* Rest of your existing styles... */
+        header {
+            padding: 2rem;
+            border-bottom: 1px solid rgba(10, 251, 96, 0.2);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            position: relative;
+        }
+
+        h1::after {
+            content: '_';
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            from, to { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 2rem;
+        }
+
+        nav ul li a {
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        nav ul li a:hover::after {
+            transform: scaleX(1);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .hero {
+            margin-bottom: 5rem;
+        }
+
+        h2 {
+            color: var(--secondary);
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .typewriter {
+            border-right: 2px solid var(--primary);
+            white-space: nowrap;
+            overflow: hidden;
+            display: inline-block;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary); }
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-dim);
+            max-width: 800px;
+        }
+
+        .highlight {
+            color: var(--primary);
+        }
+
+        .section {
+            margin-bottom: 4rem;
+            padding: 2rem;
+            background-color: var(--bg-light);
+            border-radius: 5px;
+            border-left: 3px solid var(--primary);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .thm-badge-container {
+            display: flex;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+
+        .thm-badge {
+            border: none;
+            width: 300px;
+            height: 150px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .skill-card {
+            background-color: rgba(10, 251, 96, 0.05);
+            padding: 1.5rem;
+            border-radius: 5px;
+            border: 1px solid rgba(10, 251, 96, 0.1);
+            transition: transform 0.3s, border 0.3s;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            border: 1px solid var(--primary);
+        }
+
+        .skill-card h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .project-card {
+            background-color: var(--bg-light);
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 168, 255, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 168, 255, 0.1);
+        }
+
+        .project-image {
+            height: 200px;
+            background-color: var(--bg-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dim);
+            font-size: 3rem;
+        }
+
+        .project-info {
+            padding: 1.5rem;
+        }
+
+        .project-info h3 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .tag {
+            background-color: rgba(10, 251, 96, 0.1);
+            color: var(--primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .cta {
+            text-align: center;
+            margin-top: 5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background-color: rgba(10, 251, 96, 0.1);
+            box-shadow: 0 0 10px rgba(10, 251, 96, 0.3);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(10, 251, 96, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(10, 251, 96, 0.2);
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: var(--text-dim);
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                margin-top: 1.5rem;
+            }
+
+            nav ul li {
+                margin: 0 0.8rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal-effect"></div>
+    <img id="floating-image" src="./space_charlie.png" alt="Floating decorative image">
+
+    <header>
+        <div class="header-content">
+            <h1>xtreme0@portfolio:~$</h1>
+            <nav>
+                <ul>
+                    <li><a href="#about">about</a></li>
+                    <li><a href="#skills">skills</a></li>
+                    <li><a href="#projects">projects</a></li>
+                    <li><a href="#ctf">ctf</a></li>
+                    <li><a href="#contact">contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2><span class="typewriter">Hello, I'm Anas TAAI</span></h2>
+            <p class="highlight">Software Engineering Student | Cybersecurity Enthusiast | CTF Player</p>
+            <p>I build secure systems and break insecure ones. Passionate about low-level programming and finding creative solutions to complex problems.</p>
+        </section>
+
+        <section id="about" class="section">
+            <h2>About Me</h2>
+            <p>Currently a Software Engineering student with a focus on system security. When I'm not studying or coding, you can find me participating in CTF competitions.</p>
+            <p>My approach to security is holistic - I believe understanding how systems are built is just as important as knowing how to break them.</p>
+        </section>
+
+        <section id="skills" class="section">
+            <h2>Skills & Tools</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <h3>Programming</h3>
+                    <p>C, C++, Python, Js</p>
+                </div>
+                <div class="skill-card">
+                    <h3>Security</h3>
+                    <p>Web Exploitation, Code Review</p>
+                </div>
+                <div class="skill-card">
+                    <h3>DevOps</h3>
+                    <p>Docker, Kubernetes, Ansible</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="ctf" class="section">
+            <h2>CTF Experience</h2>
+            <p>Active participant in CTF competitions</p>
+            <div class="thm-badge-container">
+                <iframe class="thm-badge" src="https://tryhackme.com/badge/5349343"></iframe>
+            </div>
+            <p>Specializing Web exploitation challenges, but enjoy all categories.</p>
+        </section>
+
+        <div class="cta">
+            <a href="#contact" class="btn">Get In Touch</a>
+        </div>
+    </main>
+
+    <footer id="contact">
+        <p>© Anas TAAI. All rights reserved.</p>
+        <p>Let's connect and talk about security, development, or potential opportunities.</p>
+        <div class="social-links">
+            <a href="https://github.com/XTREME0" aria-label="GitHub">[GH]</a>
+        </div>
+    </footer>
+
+    <script>
+        // Image animation with spinning effect
+        const floatingImage = document.getElementById('floating-image');
+        const body = document.body;
+        let posX = 0;
+        let posY = 0;
+        let directionX = 1;
+        let directionY = 1;
+        let speed = 2;
+        let rotation = 0;
+        let rotationSpeed = 1;
+        let lastTrailTime = 0;
+        
+        // Set a default image if none provided
+        if (!floatingImage.src) {
+            floatingImage.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%2300a8ff" opacity="0.7"/></svg>';
+        }
+        
+        // Auto-size the image when loaded
+        floatingImage.onload = function() {
+            const aspectRatio = this.naturalWidth / this.naturalHeight;
+            const maxSize = 80; // Maximum dimension in pixels
+            
+            if (aspectRatio > 1) {
+                // Wider than tall
+                this.style.width = `${maxSize}px`;
+                this.style.height = `${maxSize / aspectRatio}px`;
+            } else {
+                // Taller than wide or square
+                this.style.height = `${maxSize}px`;
+                this.style.width = `${maxSize * aspectRatio}px`;
+            }
+            
+            // Start animation after image loads
+            moveImage();
+        };
+
+        function moveImage() {
+            // Update position
+            posX += speed * directionX;
+            posY += speed * directionY * 0.7; // Slower vertical movement
+            
+            // Update rotation
+            rotation += rotationSpeed;
+            if (rotation >= 360) rotation = 0;
+
+            // Bounce off edges with more dynamic behavior
+            if (posX > window.innerWidth - floatingImage.offsetWidth) {
+                directionX = -1 * (0.7 + Math.random() * 0.6); // Random bounce intensity
+                rotationSpeed = -rotationSpeed; // Reverse spin direction on bounce
+            } else if (posX < 0) {
+                directionX = 1 * (0.7 + Math.random() * 0.6);
+                rotationSpeed = -rotationSpeed;
+            }
+            
+            if (posY > window.innerHeight - floatingImage.offsetHeight) {
+                directionY = -1 * (0.5 + Math.random() * 0.5);
+            } else if (posY < 0) {
+                directionY = 1 * (0.5 + Math.random() * 0.5);
+            }
+
+            // Apply new position and rotation
+            floatingImage.style.left = `${posX}px`;
+            floatingImage.style.top = `${posY}px`;
+            floatingImage.style.transform = `rotate(${rotation}deg) scaleX(${directionX > 0 ? 1 : -1})`;
+
+            // Leave image trails occasionally
+            const now = Date.now();
+            if (now - lastTrailTime > 300) { // Every 300ms
+                createImageTrail(posX, posY, rotation);
+                lastTrailTime = now;
+            }
+
+            requestAnimationFrame(moveImage);
+        }
+
+        function createImageTrail(x, y, rot) {
+            if (!floatingImage.src) return;
+            
+            const trail = document.createElement('img');
+            trail.className = 'image-trail';
+            trail.src = floatingImage.src;
+            trail.style.left = `${x}px`;
+            trail.style.top = `${y}px`;
+            trail.style.width = `${floatingImage.offsetWidth * 0.6}px`;
+            trail.style.height = `${floatingImage.offsetHeight * 0.6}px`;
+            trail.style.transform = `rotate(${rot}deg) scaleX(${directionX > 0 ? 1 : -1})`;
+            document.body.appendChild(trail);
+
+            // Remove after animation completes
+            setTimeout(() => {
+                trail.remove();
+            }, 3000);
+        }
+
+        // Randomize starting position and movement
+        function randomizeMovement() {
+            posX = Math.random() * (window.innerWidth - 80);
+            posY = Math.random() * (window.innerHeight - 80);
+            directionX = Math.random() > 0.5 ? 1 : -1;
+            directionY = Math.random() > 0.5 ? 1 : -1;
+            speed = 1.5 + Math.random() * 1.5; // Random speed between 1.5 and 3
+            rotationSpeed = (Math.random() > 0.5 ? 1 : -1) * (0.5 + Math.random() * 1.5); // Random rotation speed and direction
+        }
+
+        // Randomize movement every 10 seconds
+        setInterval(randomizeMovement, 10000);
+        
+        // Initial randomization
+        randomizeMovement();
+    </script>
+</body>
+</html>
